@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="press_again_to_exit">Press again to exit</string>
+    <string name="crypto">Crypto</string>
+    <string name="notes">Notes</string>
+</resources>
