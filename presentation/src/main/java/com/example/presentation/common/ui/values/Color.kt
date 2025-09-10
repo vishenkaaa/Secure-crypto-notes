@@ -13,10 +13,6 @@ val White: Color
     @Composable
     get() = colorResource(R.color.white)
 
-val White50: Color
-    @Composable
-    get() = colorResource(R.color.white_50)
-
 val Shadow: Color
     @Composable
     get() = colorResource(R.color.shadow)

@@ -15,9 +15,9 @@ private val ColorScheme
         primary = Blue,
         onPrimary = White,
         background = Background,
-        onBackground = Dark,
-        surface = White,
-        onSurface = Dark,
+        onBackground = White,
+        primaryContainer = Dark,
+        onPrimaryContainer = White,
         error = Red,
         onError = White,
         surfaceVariant = Shadow

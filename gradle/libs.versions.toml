@@ -25,6 +25,7 @@ androidxLifecycle = "2.8.7"
 retrofit = "2.9.0"
 retrofit2KotlinxSerializationConverter = "0.8.0"
 roomRuntime = "2.6.1"
+securityCrypto = "1.1.0"
 uiToolingPreviewAndroid = "1.9.0"
 kotlinSerialization = "1.9.22"
 kotlinxSerializationJson = "1.6.3"
@@ -36,6 +37,7 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

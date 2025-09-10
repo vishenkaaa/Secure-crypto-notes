@@ -27,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
-import com.example.presentation.common.ui.values.White
-import com.example.presentation.common.ui.values.White50
 import com.example.presentation.extension.toIcon
 import com.example.presentation.extension.toTitle
 
@@ -109,15 +107,17 @@ fun CustomNavigationBarItem(
     ) {
         Icon(
             painter = tab.toIcon(),
-            modifier = Modifier.size(28.dp),
+            modifier = Modifier.size(24.dp),
             contentDescription = tab.contentDescription,
-            tint = if (selected) White else White50,
+            tint = if (selected) MaterialTheme.colorScheme.onPrimary
+            else MaterialTheme.colorScheme.onPrimary.copy(0.5f),
         )
         Spacer(Modifier.height(6.dp))
         Text(
             text = tab.toTitle(),
-            color = if (selected) White else White50,
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 12.sp)
+            color = if (selected) MaterialTheme.colorScheme.onPrimary
+            else MaterialTheme.colorScheme.onPrimary.copy(0.5f),
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }
