@@ -1,4 +1,4 @@
-package com.example.presentation.feature.idle
+package com.example.presentation.feature.splash
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -27,53 +27,62 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.presentation.R
 import com.example.presentation.common.ui.values.SecureCryptoNotesTheme
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
 @Composable
-fun IdleScreen() {
-    SplashScreen()
+fun SplashRoute(
+    viewModel: SplashVM = hiltViewModel(),
+) {
+    SplashScreen{ viewModel.setNeedAuthState() }
 }
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(
+    onFinished: () -> Unit = {}
+) {
     val logoAlpha = remember { Animatable(0f) }
     val logoScale = remember { Animatable(0.3f) }
     val textAlpha = remember { Animatable(0f) }
     val textTranslationY = remember { Animatable(50f) }
 
-    LaunchedEffect(key1 = true) {
-        launch {
+    LaunchedEffect(Unit) {
+        val logoScaleJob = launch {
             logoScale.animateTo(
                 1f,
                 animationSpec = tween(1200, easing = FastOutSlowInEasing)
             )
         }
-        launch {
+        val logoAlphaJob = launch {
             logoAlpha.animateTo(
                 1f,
                 animationSpec = tween(1000, delayMillis = 300)
             )
         }
 
-        delay(800)
-        launch {
+        joinAll(logoScaleJob, logoAlphaJob)
+
+        val textTranslationJob = launch {
             textTranslationY.animateTo(
                 0f,
                 animationSpec = tween(1000, easing = FastOutSlowInEasing)
             )
         }
-        launch {
+        val textAlphaJob = launch {
             textAlpha.animateTo(
                 1f,
                 animationSpec = tween(800, delayMillis = 200)
             )
         }
 
-        delay(2000)
+        joinAll(textTranslationJob, textAlphaJob)
+
+        onFinished()
     }
+
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -109,7 +118,7 @@ fun SplashScreen() {
                     .offset { IntOffset(0, textTranslationY.value.dp.roundToPx()) },
                 text = stringResource(R.string.secure_crypto_notes),
                 style = MaterialTheme.typography.displayLarge,
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }

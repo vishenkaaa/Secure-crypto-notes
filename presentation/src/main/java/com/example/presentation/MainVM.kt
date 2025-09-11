@@ -1,7 +1,14 @@
 package com.example.presentation
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.example.domain.repository.AuthRepository
 import com.example.presentation.arch.BaseViewModel
+import com.example.presentation.manager.AuthState
+import com.example.presentation.manager.AuthStateManager
+import com.example.presentation.navigation.Graphs
 import com.example.presentation.navigation.Home
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +22,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainVM @Inject constructor(
+    private val authStateManager: AuthStateManager,
 ) : BaseViewModel() {
+
+    val authState: StateFlow<AuthState> = authStateManager.authState
+
     private val _shouldShowBottomBar = MutableStateFlow(false)
     val shouldShowBottomBar: StateFlow<Boolean> = _shouldShowBottomBar.asStateFlow()
 
@@ -24,6 +35,25 @@ class MainVM @Inject constructor(
 
     private var lastBackPressTime: Long = 0
     private var currentRoute: String? = null
+
+    private var backgroundStartTime: Long = 0
+
+    fun onAppBackgrounded() {
+        backgroundStartTime = System.currentTimeMillis()
+    }
+
+    fun onAppResumed() {
+        val timeInBackground = System.currentTimeMillis() - backgroundStartTime
+
+        if (timeInBackground > 5_000 && backgroundStartTime!=0L){
+            authStateManager.setAuthState(AuthState.NeedsAuth)
+        }
+    }
+
+    fun lockApp() {
+        authStateManager.setAuthState(AuthState.NeedsAuth)
+        backgroundStartTime = 0L
+    }
 
     fun onBackPressed() {
         viewModelScope.launch {
@@ -57,7 +87,9 @@ class MainVM @Inject constructor(
     private fun isDestinationRoot(route: String?): Boolean {
         if (route == null) return false
 
-        return route != Home.CryptoDetails::class.qualifiedName
+        return route == Home.Crypto::class.qualifiedName ||
+                route == Home.Notes::class.qualifiedName ||
+                route == Graphs.Auth::class.qualifiedName
     }
 }
 

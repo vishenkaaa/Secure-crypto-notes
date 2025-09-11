@@ -63,6 +63,8 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.tink.android)
+    implementation(libs.androidx.security.crypto)
 
     // Retrofit + Serialization
     implementation(libs.retrofit)

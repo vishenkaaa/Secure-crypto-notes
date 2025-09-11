@@ -26,9 +26,11 @@ retrofit = "2.9.0"
 retrofit2KotlinxSerializationConverter = "0.8.0"
 roomRuntime = "2.6.1"
 securityCrypto = "1.1.0"
+tinkAndroid = "1.18.0"
 uiToolingPreviewAndroid = "1.9.0"
 kotlinSerialization = "1.9.22"
 kotlinxSerializationJson = "1.6.3"
+biometric = "1.2.0-alpha05"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,6 +74,9 @@ androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "u
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
+tink-android = { module = "com.google.crypto.tink:tink-android", version.ref = "tinkAndroid" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

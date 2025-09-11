@@ -1,8 +1,5 @@
 package com.example.presentation.arch
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +19,6 @@ open class BaseViewModel : ViewModel() {
 
     protected open fun handleError(
         e: Throwable,
-        context: Context? = null,
         retryAction: (() -> Unit)? = null
     ) {
         e.printStackTrace()
@@ -43,6 +39,10 @@ open class BaseViewModel : ViewModel() {
         }
     }
 
+    fun hasRetryAction(): Boolean {
+        return lastRetryAction != null
+    }
+
     fun retryLastAction() {
         clearErrors()
         lastRetryAction?.invoke()
@@ -55,5 +55,6 @@ open class BaseViewModel : ViewModel() {
                 isConnectionError = false
             )
         }
+        lastRetryAction = null
     }
 }

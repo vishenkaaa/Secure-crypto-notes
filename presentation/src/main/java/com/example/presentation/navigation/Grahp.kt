@@ -5,25 +5,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Graphs {
     @Serializable
-    data object IdleScreen : Graphs()
+    data object Splash : Graphs()
 
     @Serializable
-    data object Login : Graphs()
+    data object Auth : Graphs()
 
     @Serializable
     data object Home : Graphs()
 }
-
-@Serializable
-sealed class Login {
-
-    @Serializable
-    data object Biometric : Login()
-
-    @Serializable
-    data object Pin : Login()
-}
-
 
 @Serializable
 sealed class Home {

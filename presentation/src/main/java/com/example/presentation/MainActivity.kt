@@ -2,7 +2,6 @@ package com.example.presentation
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
@@ -37,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     private val viewModel: MainVM by viewModels()
     private var navController: NavHostController? = null
@@ -46,8 +48,32 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        setupLifecycleObserver()
         setContent()
         observeUiEvents()
+    }
+
+    private fun setupLifecycleObserver() {
+        lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onStop(owner: LifecycleOwner) {
+                viewModel.lockApp()
+            }
+
+            override fun onPause(owner: LifecycleOwner) {
+                super.onPause(owner)
+                viewModel.onAppBackgrounded()
+            }
+
+            override fun onResume(owner: LifecycleOwner) {
+                super.onResume(owner)
+                viewModel.onAppResumed()
+            }
+
+            override fun onStart(owner: LifecycleOwner) {
+                super.onStart(owner)
+                viewModel.onAppResumed()
+            }
+        })
     }
 
     private fun observeUiEvents() {
@@ -70,20 +96,18 @@ class MainActivity : ComponentActivity() {
     private fun setContent(){
         setContent{
             val shouldShowBottomBar by viewModel.shouldShowBottomBar.collectAsStateWithLifecycle()
+            val authState by viewModel.authState.collectAsStateWithLifecycle()
+
             val snackbarHostState = remember { SnackbarHostState() }
             navController = rememberNavController()
 
-            LaunchedEffect(navController) {
-                navController!!.addOnDestinationChangedListener { _, destination, _ ->
-                    viewModel.onDestinationChanged(destination.route)
-                }
-            }
-
-            BackHandler{
-                viewModel.onBackPressed()
-            }
-
             SecureCryptoNotesTheme {
+                LaunchedEffect(navController) {
+                    navController!!.addOnDestinationChangedListener { _, destination, _ ->
+                        viewModel.onDestinationChanged(destination.route)
+                    }
+                }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -101,11 +125,16 @@ class MainActivity : ComponentActivity() {
                             Box(modifier = Modifier.padding(paddingValues)) {
                                 AppNavHost(
                                     modifier = Modifier.fillMaxSize(),
-                                    navController = navController!!
+                                    navController = navController!!,
+                                    authState = authState
                                 )
 
                                 val navBackStackEntry by navController!!.currentBackStackEntryAsState()
                                 val currentDestination = navBackStackEntry?.destination
+
+                                BackHandler{
+                                    viewModel.onBackPressed()
+                                }
 
                                 AnimatedVisibility(
                                     visible = shouldShowBottomBar,

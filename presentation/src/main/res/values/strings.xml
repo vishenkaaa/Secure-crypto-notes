@@ -4,4 +4,19 @@
     <string name="crypto">Crypto</string>
     <string name="notes">Notes</string>
     <string name="secure_crypto_notes">Secure Crypto\nNotes</string>
+    <string name="retry">Retry</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="create_pin">Create PIN</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="use_biometric">Use biometric</string>
+    <string name="create_4_digit_pin">Create a 4-digit PIN code</string>
+    <string name="confirm_pin_code">Confirm your PIN code</string>
+    <string name="enter_pin_code">Enter your PIN code</string>
+    <string name="biometric_prompt_title">Unlock the app</string>
+    <string name="biometric_prompt_subtitle">Use your fingerprint or another biometric method</string>
+    <string name="biometric_prompt_use_pin">Use PIN</string>
+    <string name="error_biometric_auth">Помилка автентифікації: %1$s</string>
+    <string name="error_biometric_init">Помилка ініціалізації біометрії</string>
+    <string name="error_incorrect_pin">Невірний PIN</string>
+    <string name="error_pin_mismatch">PIN коди не співпадають</string>
 </resources>
