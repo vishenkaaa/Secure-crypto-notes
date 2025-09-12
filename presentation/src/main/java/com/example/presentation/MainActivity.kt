@@ -110,17 +110,11 @@ class MainActivity : FragmentActivity() {
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
-                        contentWindowInsets = WindowInsets(
-                            top = 0.dp,
-                            bottom = if (shouldShowBottomBar)
-                                WindowInsets.navigationBars.asPaddingValues()
-                                    .calculateBottomPadding()
-                            else 0.dp
-                        ),
+                        contentWindowInsets = WindowInsets(0.dp),
                         content = { paddingValues ->
                             Box(modifier = Modifier.padding(paddingValues)) {
                                 AppNavHost(

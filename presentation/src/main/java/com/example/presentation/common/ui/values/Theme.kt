@@ -9,6 +9,7 @@ private val ColorScheme
     get() = lightColorScheme(
         primary = Blue,
         onPrimary = White,
+        secondary = LightGray,
         background = Background,
         onBackground = White,
         primaryContainer = Dark,

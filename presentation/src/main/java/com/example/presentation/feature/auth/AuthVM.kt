@@ -1,18 +1,18 @@
 package com.example.presentation.feature.auth
 
 import android.content.Context
-import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.AuthRepository
 import com.example.presentation.R
 import com.example.presentation.arch.BaseViewModel
+import com.example.presentation.common.utils.AuthState
 import com.example.presentation.common.utils.BiometricHelper
 import com.example.presentation.feature.auth.model.AuthScreenUIState
 import com.example.presentation.feature.auth.model.AuthStep
 import com.example.presentation.feature.auth.model.BiometricState
-import com.example.presentation.manager.AuthStateManager
+import com.example.presentation.common.utils.AuthStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
@@ -164,7 +164,7 @@ class AuthVM @Inject constructor(
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 _biometricState.value = BiometricState.Success
                 viewModelScope.launch {
-                    authStateManager.setAuthState(com.example.presentation.manager.AuthState.Authenticated)
+                    authStateManager.setAuthState(AuthState.Authenticated)
                 }
             }
 
@@ -245,7 +245,7 @@ class AuthVM @Inject constructor(
             try {
                 handleLoading(true)
                 authRepository.savePin(pin)
-                authStateManager.setAuthState(com.example.presentation.manager.AuthState.Authenticated)
+                authStateManager.setAuthState(AuthState.Authenticated)
                 _uiState.update { it.copy(isComplete = true) }
             } catch (e: Exception) {
                 resetAuthState()
@@ -258,13 +258,13 @@ class AuthVM @Inject constructor(
     }
 
     private fun verifyPin(pin: String) {
+        handleLoading(true)
         viewModelScope.launch {
             try {
-                handleLoading(true)
                 val isValid = authRepository.verifyPin(pin)
 
                 if (isValid) {
-                    authStateManager.setAuthState(com.example.presentation.manager.AuthState.Authenticated)
+                    authStateManager.setAuthState(AuthState.Authenticated)
                     _uiState.update { it.copy(isComplete = true) }
                 } else {
                     handleError(Exception(context.getString(R.string.error_incorrect_pin)))

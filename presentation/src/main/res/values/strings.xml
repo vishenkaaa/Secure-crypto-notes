@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Secure Crypto Notes</string>
     <string name="press_again_to_exit">Press again to exit</string>
     <string name="crypto">Crypto</string>
     <string name="notes">Notes</string>
@@ -15,8 +16,20 @@
     <string name="biometric_prompt_title">Unlock the app</string>
     <string name="biometric_prompt_subtitle">Use your fingerprint or another biometric method</string>
     <string name="biometric_prompt_use_pin">Use PIN</string>
-    <string name="error_biometric_auth">Помилка автентифікації: %1$s</string>
-    <string name="error_biometric_init">Помилка ініціалізації біометрії</string>
-    <string name="error_incorrect_pin">Невірний PIN</string>
-    <string name="error_pin_mismatch">PIN коди не співпадають</string>
+    <string name="error_biometric_auth">Authentication error: %1$s</string>
+    <string name="error_biometric_init">Biometric initialization error</string>
+    <string name="error_incorrect_pin">Incorrect PIN</string>
+    <string name="error_pin_mismatch">PIN codes do not match</string>
+    <string name="note_is_copied">Note copied</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_note_title">Delete note</string>
+    <string name="delete_note_message">Are you sure you want to delete this note? This action cannot be undone</string>
+    <string name="delete">Delete</string>
+    <string name="add_note">Add note</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="save_note">Save note</string>
 </resources>

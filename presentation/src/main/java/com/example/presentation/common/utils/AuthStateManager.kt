@@ -1,4 +1,4 @@
-package com.example.presentation.manager
+package com.example.presentation.common.utils
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

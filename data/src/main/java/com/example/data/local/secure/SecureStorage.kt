@@ -102,8 +102,4 @@ class SecureStorage @Inject constructor(
     }
 
     fun contains(key: String): Boolean = prefs.contains(key)
-
-    fun remove(key: String) {
-        prefs.edit { remove(key) }
-    }
 }

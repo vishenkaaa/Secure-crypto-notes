@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetAllNotesUseCase @Inject constructor (
     private val noteRepository: NoteRepository
 ){
-    suspend operator fun invoke(): Flow<List<Note>> =
+    operator fun invoke(): Flow<List<Note>> =
         noteRepository.getAllNotes()
 }

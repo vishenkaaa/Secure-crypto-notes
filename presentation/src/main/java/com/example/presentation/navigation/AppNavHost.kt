@@ -5,17 +5,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.presentation.common.utils.AuthState
 import com.example.presentation.feature.auth.AuthRoute
+import com.example.presentation.feature.home.notes.NotesRoute
 import com.example.presentation.feature.splash.SplashRoute
-import com.example.presentation.manager.AuthState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -56,8 +59,11 @@ fun AppNavHost(
         composable<Graphs.Splash> {
             SplashRoute()
         }
-        composable<Graphs.Auth> {
-            AuthRoute()
+        composable<Graphs.Auth> { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry<Graphs.Auth>()
+            }
+            AuthRoute(hiltViewModel(parentEntry))
         }
         homeGraph(navController)
     }
@@ -69,13 +75,11 @@ private fun NavGraphBuilder.homeGraph(
     navigation<Graphs.Home>(
         startDestination = Home.Notes
     ) {
-        composable<Home.Notes> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ){
-                Text("Notes")
+        composable<Home.Notes> { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry<Graphs.Home>()
             }
+            NotesRoute(hiltViewModel(parentEntry))
         }
 
         composable<Home.Crypto> {

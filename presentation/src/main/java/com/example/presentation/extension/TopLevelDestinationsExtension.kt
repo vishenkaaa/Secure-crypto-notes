@@ -19,6 +19,6 @@ fun TopLevelDestinations.toTitle(): String{
 fun TopLevelDestinations.toIcon(): Painter {
     return when (this) {
         TopLevelDestinations.NOTES -> painterResource(R.drawable.ic_notes)
-        TopLevelDestinations.CRYPTO -> painterResource(R.drawable.ic_notes)
+        TopLevelDestinations.CRYPTO -> painterResource(R.drawable.ic_crypto)
     }
 }

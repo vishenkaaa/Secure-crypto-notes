@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -91,24 +92,26 @@ fun AuthScreen(
     hasRetryAction: Boolean = false
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        Column (
+        Scaffold (
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
-        ) {
-            if (uiState.isCreatingPin) {
-                CenterAlignedHeader(
-                    title = when (uiState.step) {
-                        AuthStep.ENTER_PIN -> stringResource(R.string.create_pin)
-                        AuthStep.CONFIRM_PIN -> stringResource(R.string.confirm_pin)
-                        else -> ""
-                    }
-                )
+            topBar = {
+                if (uiState.isCreatingPin) {
+                    CenterAlignedHeader(
+                        title = when (uiState.step) {
+                            AuthStep.ENTER_PIN -> stringResource(R.string.create_pin)
+                            AuthStep.CONFIRM_PIN -> stringResource(R.string.confirm_pin)
+                            else -> ""
+                        }
+                    )
+                }
             }
-
+        ) { padding ->
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
                 PinContent(
@@ -127,7 +130,7 @@ fun AuthScreen(
             onRetry = if (hasRetryAction) retryLastAction else null
         )
 
-        LoadingBackground(uiState.isLoading)
+        LoadingBackground(baseUIState.isLoading)
     }
 }
 

@@ -40,6 +40,7 @@ val headline1: TextStyle
         fontFamily = gilroyFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
+        lineHeight = 24.sp,
         color = MaterialTheme.colorScheme.onBackground
     )
 
@@ -58,6 +59,7 @@ val body1: TextStyle
         fontFamily = gilroyFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
+        lineHeight = 24.sp,
         color = MaterialTheme.colorScheme.onBackground
     )
 
@@ -67,6 +69,7 @@ val body2: TextStyle
         fontFamily = gilroyFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
+        lineHeight = 21.sp,
         color = MaterialTheme.colorScheme.onBackground
     )
 
@@ -76,6 +79,7 @@ val body3: TextStyle
         fontFamily = gilroyFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
+        lineHeight = 18.sp,
         color = MaterialTheme.colorScheme.onBackground
     )
 

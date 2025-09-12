@@ -1,8 +1,8 @@
 package com.example.presentation.feature.splash
 
 import com.example.presentation.arch.BaseViewModel
-import com.example.presentation.manager.AuthState
-import com.example.presentation.manager.AuthStateManager
+import com.example.presentation.common.utils.AuthState
+import com.example.presentation.common.utils.AuthStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

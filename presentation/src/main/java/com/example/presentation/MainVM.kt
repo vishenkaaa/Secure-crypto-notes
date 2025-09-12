@@ -1,13 +1,9 @@
 package com.example.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.example.domain.repository.AuthRepository
 import com.example.presentation.arch.BaseViewModel
-import com.example.presentation.manager.AuthState
-import com.example.presentation.manager.AuthStateManager
+import com.example.presentation.common.utils.AuthState
+import com.example.presentation.common.utils.AuthStateManager
 import com.example.presentation.navigation.Graphs
 import com.example.presentation.navigation.Home
 import dagger.hilt.android.lifecycle.HiltViewModel
