@@ -190,6 +190,7 @@ class AuthVM @Inject constructor(
                             _uiState.update { it.copy(step = AuthStep.CONFIRM_PIN) }
                         } else {
                             viewModelScope.launch {
+                                handleLoading(true)
                                 delay(200)
                                 verifyPin(newPin)
                             }
@@ -258,7 +259,6 @@ class AuthVM @Inject constructor(
     }
 
     private fun verifyPin(pin: String) {
-        handleLoading(true)
         viewModelScope.launch {
             try {
                 val isValid = authRepository.verifyPin(pin)

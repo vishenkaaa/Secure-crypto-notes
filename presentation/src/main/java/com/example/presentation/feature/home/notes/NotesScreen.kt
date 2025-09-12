@@ -124,7 +124,7 @@ fun NotesRoute(viewModel: NotesVM = hiltViewModel()) {
 
     NotesScreen(
         uiState = uiState,
-        baseUiState = baseUiState,
+        baseUIState = baseUiState,
         listState = listState,
         fabVisible = !isScrollingDown.value,
         openAddNoteBottomSheet = viewModel::openAddNoteBottomSheet,
@@ -149,7 +149,7 @@ fun NotesRoute(viewModel: NotesVM = hiltViewModel()) {
 @Composable
 fun NotesScreen(
     uiState: NotesUIState,
-    baseUiState: BaseUiState,
+    baseUIState: BaseUiState,
     listState: LazyListState,
     fabVisible: Boolean,
     openAddNoteBottomSheet: () -> Unit,
@@ -263,12 +263,12 @@ fun NotesScreen(
         }
 
         HandleError(
-            baseUiState = baseUiState,
+            baseUiState = baseUIState,
             onErrorConsume = clearErrors,
             onRetry = if (hasRetryAction) retryLastAction else null
         )
 
-        LoadingBackground(baseUiState.isLoading)
+        LoadingBackground(baseUIState.isLoading)
     }
 }
 
@@ -643,7 +643,7 @@ fun NotesScreenPreview() {
     SecureCryptoNotesTheme {
         NotesScreen(
             uiState = mockUIState,
-            baseUiState = BaseUiState(),
+            baseUIState = BaseUiState(),
             listState = LazyListState(),
             fabVisible = true,
             openAddNoteBottomSheet = {},
