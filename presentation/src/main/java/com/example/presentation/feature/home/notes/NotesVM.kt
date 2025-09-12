@@ -6,7 +6,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.Note
+import com.example.domain.model.note.Note
 import com.example.domain.usecase.note.AddNoteUseCase
 import com.example.domain.usecase.note.DeleteNoteUseCase
 import com.example.domain.usecase.note.GetAllNotesUseCase

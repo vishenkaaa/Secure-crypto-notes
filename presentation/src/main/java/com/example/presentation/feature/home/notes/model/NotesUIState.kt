@@ -1,6 +1,6 @@
 package com.example.presentation.feature.home.notes.model
 
-import com.example.domain.model.Note
+import com.example.domain.model.note.Note
 import java.time.LocalDate
 
 data class NotesUIState(

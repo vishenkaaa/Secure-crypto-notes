@@ -1,6 +1,6 @@
 package com.example.domain.usecase.note
 
-import com.example.domain.model.Note
+import com.example.domain.model.note.Note
 import com.example.domain.repository.NoteRepository
 import javax.inject.Inject
 

@@ -74,7 +74,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.domain.model.Note
+import com.example.domain.model.note.Note
 import com.example.presentation.R
 import com.example.presentation.arch.BaseUiState
 import com.example.presentation.common.ui.components.CenterAlignedHeader

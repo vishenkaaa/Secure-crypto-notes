@@ -1,8 +1,10 @@
 package com.example.data.di
 
 import com.example.data.repositories.AuthRepositoryImpl
+import com.example.data.repositories.CoinRepositoryImpl
 import com.example.data.repositories.NoteRepositoryImpl
 import com.example.domain.repository.AuthRepository
+import com.example.domain.repository.CoinRepository
 import com.example.domain.repository.NoteRepository
 import dagger.Binds
 import dagger.Module
@@ -25,4 +27,10 @@ abstract class RepositoryModule {
     abstract fun bindNoteRepository(
         noteRepositoryImpl: NoteRepositoryImpl
     ): NoteRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCoinRepository(
+        impl: CoinRepositoryImpl
+    ): CoinRepository
 }

@@ -2,7 +2,7 @@ package com.example.data.local.db.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.domain.model.Note
+import com.example.domain.model.note.Note
 
 @Entity(tableName = "notes")
 data class NoteEntity(
