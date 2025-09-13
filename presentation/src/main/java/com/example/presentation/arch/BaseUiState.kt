@@ -1,7 +1,10 @@
 package com.example.presentation.arch
 
+import com.example.domain.model.exception.BaseException
+
 data class BaseUiState(
     val isLoading: Boolean = false,
-    val unexpectedError: String? = null,
-    val isConnectionError: Boolean = false
-)
+    val error: BaseException? = null
+) {
+    val hasError: Boolean get() = error != null
+}

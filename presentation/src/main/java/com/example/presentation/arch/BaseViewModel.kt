@@ -1,6 +1,7 @@
 package com.example.presentation.arch
 
 import androidx.lifecycle.ViewModel
+import com.example.presentation.common.utils.ErrorMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,18 +26,10 @@ open class BaseViewModel : ViewModel() {
 
         lastRetryAction = retryAction
 
-        _baseUiState.update {
-            when (e) {
-                is java.net.UnknownHostException,
-                is java.net.SocketTimeoutException,
-                is java.io.IOException -> {
-                    it.copy(isConnectionError = true, isLoading = false)
-                }
-                else -> {
-                    it.copy(unexpectedError = e.localizedMessage, isLoading = false)
-                }
-            }
-        }
+        val mappedError = ErrorMapper.mapError(e)
+
+        lastRetryAction = retryAction
+        _baseUiState.update { it.copy(error = mappedError, isLoading = false) }
     }
 
     fun hasRetryAction(): Boolean {
@@ -49,12 +42,7 @@ open class BaseViewModel : ViewModel() {
     }
 
     open fun clearErrors() {
-        _baseUiState.update {
-            it.copy(
-                unexpectedError = null,
-                isConnectionError = false
-            )
-        }
+        _baseUiState.update { it.copy(error = null) }
         lastRetryAction = null
     }
 }

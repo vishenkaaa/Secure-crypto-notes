@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.retrofit)
 
     // Compose BOM & UI
     val composeBom = platform(libs.androidx.compose.bom)

@@ -7,6 +7,11 @@ import javax.inject.Inject
 class GetTopCoinsUseCase @Inject constructor (
     private val repository: CoinRepository
 ) {
-    suspend operator fun invoke(limit: Int = 10): List<Coin> =
-        repository.getTopCoins(limit)
+    suspend operator fun invoke(limit: Int = 10): Result<List<Coin>> =
+        try {
+            val coins = repository.getTopCoins(limit)
+            Result.success(coins)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
 }

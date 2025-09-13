@@ -52,34 +52,15 @@ class NotesVM @Inject constructor(
     private fun observeNotes() {
         getAllNotesUseCase()
             .onStart { handleLoading(true) }
-            .catch { e -> handleError(e)
-                handleLoading(false)
-            }
+            .catch { e -> handleError(e) }
             .onEach { notes ->
                 _uiState.update {
                     it.copy(
                         groupedNotes = notes.groupBy { n -> n.createdAt.toLocalDate() }
                     )
                 }
-                handleLoading(false)
             }.launchIn(viewModelScope)
-    }
-
-    private fun addNote() {
-        val title = _uiState.value.title
-        val content = _uiState.value.content
-
-        viewModelScope.launch {
-            try {
-                handleLoading(true)
-                addNoteUseCase(title, content)
-                _uiState.update { it.copy(isAddBottomSheetOpen = false) }
-            } catch (e: Throwable) {
-                handleError(e) { addNote() }
-            } finally {
-                handleLoading(false)
-            }
-        }
+            .also { handleLoading(false) }
     }
 
     fun requestDeleteConfirmation(note: Note) {
@@ -101,13 +82,34 @@ class NotesVM @Inject constructor(
         }
     }
 
+    fun saveNewNote() {
+        val title = _uiState.value.title
+        val content = _uiState.value.content
+
+        if (title.isNotBlank() && content.isNotBlank()) {
+
+            viewModelScope.launch {
+                try {
+                    handleLoading(true)
+                    addNoteUseCase(title, content)
+                    _uiState.update { it.copy(isAddBottomSheetOpen = false) }
+                    clearNewNote()
+                } catch (e: Throwable) {
+                    handleError(e)
+                } finally {
+                    handleLoading(false)
+                }
+            }
+        }
+    }
+
     private fun deleteNote(note: Note) {
         viewModelScope.launch {
             try {
                 handleLoading(true)
                 deleteNoteUseCase(note)
             } catch (e: Throwable) {
-                handleError(e) { deleteNote(note) }
+                handleError(e)
             } finally {
                 handleLoading(false)
             }
@@ -136,13 +138,6 @@ class NotesVM @Inject constructor(
 
     fun updateContentNewNote(newContent: String) {
         _uiState.update { it.copy(content = newContent) }
-    }
-
-    fun saveNewNote(){
-        if (_uiState.value.title.isNotBlank() && _uiState.value.content.isNotBlank()) {
-            addNote()
-            clearNewNote()
-        }
     }
 
     fun clearNewNote(){
