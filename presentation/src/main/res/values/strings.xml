@@ -38,4 +38,5 @@
     <string name="too_many_requests">Too many requests, please try again later</string>
     <string name="server_error">Server error, please try again</string>
     <string name="unexpected_error">Unexpected error occurred</string>
+    <string name="usd">%1$s USD</string>
 </resources>

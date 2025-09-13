@@ -1,5 +1,6 @@
 package com.example.presentation.feature.home.crypto
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.coin.Coin
 import com.example.domain.usecase.coin.GetTopCoinsUseCase
@@ -36,8 +37,13 @@ class CryptoVM @Inject constructor(
                 .also { handleLoading(false) }
         }
     }
+
+    fun updateScrollState(newState: LazyListState) {
+        _uiState.update { it.copy(scrollState = newState) }
+    }
 }
 
 data class CryptoUiState(
-    val coins: List<Coin> = emptyList()
+    val coins: List<Coin> = emptyList(),
+    val scrollState: LazyListState = LazyListState()
 )

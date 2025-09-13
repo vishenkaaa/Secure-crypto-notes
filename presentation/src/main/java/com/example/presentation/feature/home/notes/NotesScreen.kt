@@ -62,6 +62,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -329,14 +330,17 @@ private fun DateSection(
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
-        notes.forEach { note ->
-            SwipeNoteItem(
-                note = note,
-                onCopy = { onCopyNote(note, context) },
-                onDelete = { onDeleteNote(note) },
-                onClick = onClick,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            notes.forEach { note ->
+                SwipeNoteItem(
+                    note = note,
+                    onCopy = { onCopyNote(note, context) },
+                    onDelete = { onDeleteNote(note) },
+                    onClick = onClick,
+                )
+            }
         }
     }
 }
@@ -434,10 +438,8 @@ private fun NoteItem(note: Note, onClick: (Note) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) {
+            .clip(RoundedCornerShape(16.dp))
+            .clickable {
                 onClick(note)
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
