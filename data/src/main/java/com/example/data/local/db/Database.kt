@@ -4,14 +4,21 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.data.local.db.dao.CoinDao
 import com.example.data.local.db.dao.NoteDao
+import com.example.data.local.db.entities.CoinEntity
 import com.example.data.local.db.entities.NoteEntity
 import com.example.data.local.secure.DatabasePasswordManager
 import net.sqlcipher.database.SupportFactory
 
-@Database(entities = [NoteEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [NoteEntity::class, CoinEntity::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
+    abstract fun coinDao(): CoinDao
 
     companion object {
         private const val DB_NAME = "secure_notes_db"
@@ -29,6 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
                     DB_NAME
                 )
                 .openHelperFactory(factory)
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class DeleteNoteUseCase @Inject constructor (
     private val noteRepository: NoteRepository
 ){
-    suspend operator fun invoke(note: Note): Result<Unit>  =
+    suspend operator fun invoke(note: Note): Result<Unit> =
         try {
             noteRepository.deleteNote(note)
             Result.success(Unit)

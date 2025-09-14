@@ -43,6 +43,5 @@ open class BaseViewModel : ViewModel() {
 
     open fun clearErrors() {
         _baseUiState.update { it.copy(error = null) }
-        lastRetryAction = null
     }
 }

@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,7 +29,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,6 +43,9 @@ import com.example.presentation.common.ui.components.CenterAlignedHeader
 import com.example.presentation.common.ui.components.HandleError
 import com.example.presentation.common.ui.components.LoadingBackground
 import com.example.presentation.common.ui.modifier.softShadow
+import com.example.presentation.common.ui.values.Orange
+import com.example.presentation.common.ui.values.SecureCryptoNotesTheme
+import com.example.presentation.feature.home.crypto.model.CryptoUiState
 
 @SuppressLint("FrequentlyChangingValue")
 @Composable
@@ -55,6 +62,7 @@ fun CryptoRoute(
     CryptoScreen(
         uiState = uiState,
         baseUiState = baseUiState,
+        toggleFavorite = viewModel::toggleFavorite,
         clearErrors = viewModel::clearErrors,
         retryLastAction = viewModel::retryLastAction,
         hasRetryAction = viewModel.hasRetryAction()
@@ -66,6 +74,7 @@ fun CryptoRoute(
 fun CryptoScreen(
     uiState: CryptoUiState,
     baseUiState: BaseUiState,
+    toggleFavorite: (Coin) -> Unit = {},
     clearErrors: () -> Unit,
     retryLastAction: () -> Unit,
     hasRetryAction: Boolean = false
@@ -85,7 +94,10 @@ fun CryptoScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(uiState.coins) { coin ->
-                    CoinItem(coin) {}
+                    CoinItem(
+                        coin = coin,
+                        onFavoriteClick = toggleFavorite
+                    )
                 }
 
                 item { Spacer(Modifier.height(60.dp)) }
@@ -106,6 +118,7 @@ fun CryptoScreen(
 fun CoinItem(
     coin: Coin,
     onClick: (Coin) -> Unit = {},
+    onFavoriteClick: (Coin) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -151,6 +164,18 @@ fun CoinItem(
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.secondary
                     )
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(
+                        onClick = { onFavoriteClick(coin) },
+                        modifier = Modifier.size(24.dp)
+                    ) {
+                        Icon(
+                            painter = if (coin.isFavorite) painterResource(R.drawable.ic_star_filled)
+                            else painterResource(R.drawable.ic_star),
+                            contentDescription = "favorite",
+                            tint = Orange
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -162,5 +187,41 @@ fun CoinItem(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CryptoScreenPreview() {
+    val sampleCoins = listOf(
+        Coin(
+            id = "bitcoin",
+            symbol = "BTC",
+            name = "Bitcoin",
+            image = "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+            currentPrice = 45230.50,
+            isFavorite = true
+        ),
+        Coin(
+            id = "ethereum",
+            symbol = "ETH",
+            name = "Ethereum",
+            image = "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+            currentPrice = 2845.75,
+            isFavorite = false
+        ),
+    )
+
+    val uiState = CryptoUiState(coins = sampleCoins)
+    val baseUiState = BaseUiState()
+
+    SecureCryptoNotesTheme {
+        CryptoScreen(
+            uiState = uiState,
+            baseUiState = baseUiState,
+            clearErrors = {},
+            retryLastAction = {},
+            hasRetryAction = false
+        )
     }
 }

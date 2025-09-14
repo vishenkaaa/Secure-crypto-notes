@@ -2,6 +2,7 @@ package com.example.data.di
 
 import android.content.Context
 import com.example.data.local.db.AppDatabase
+import com.example.data.local.db.dao.CoinDao
 import com.example.data.local.db.dao.NoteDao
 import com.example.data.local.secure.DatabasePasswordManager
 import com.example.data.local.secure.SecureStorage
@@ -37,4 +38,7 @@ object DatabaseModule {
 
     @Provides
     fun provideNoteDao(db: AppDatabase): NoteDao = db.noteDao()
+
+    @Provides
+    fun provideCoinDao(db: AppDatabase): CoinDao = db.coinDao()
 }

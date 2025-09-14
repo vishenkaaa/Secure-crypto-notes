@@ -5,6 +5,9 @@ import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.AuthRepository
+import com.example.domain.usecase.auth.HasPinUseCase
+import com.example.domain.usecase.auth.SavePinUseCase
+import com.example.domain.usecase.auth.VerifyPinUseCase
 import com.example.presentation.R
 import com.example.presentation.arch.BaseViewModel
 import com.example.presentation.common.utils.AuthState
@@ -18,6 +21,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,8 +33,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthVM @Inject constructor(
     private val authStateManager: AuthStateManager,
-    private val authRepository: AuthRepository,
     private val biometricHelper: BiometricHelper,
+    private val hasPinUseCase: HasPinUseCase,
+    private val savePinUseCase: SavePinUseCase,
+    private val verifyPinUseCase: VerifyPinUseCase,
     @ApplicationContext private val context: Context
 ) : BaseViewModel() {
 
@@ -46,7 +56,7 @@ class AuthVM @Inject constructor(
         viewModelScope.launch {
             try {
                 handleLoading(true)
-                val hasPin = authRepository.hasPin()
+                val hasPin = hasPinUseCase()
                 val canUseBiometric = biometricHelper.canUseBiometric()
 
                 if (!hasPin) {
@@ -186,12 +196,12 @@ class AuthVM @Inject constructor(
                     clearErrors()
 
                     if (newPin.length == 4) {
-                        if (current.isCreatingPin) {
-                            _uiState.update { it.copy(step = AuthStep.CONFIRM_PIN) }
-                        } else {
-                            viewModelScope.launch {
-                                handleLoading(true)
-                                delay(200)
+                        viewModelScope.launch {
+                            handleLoading(true)
+                            delay(150)
+                            if (current.isCreatingPin) {
+                                _uiState.update { it.copy(step = AuthStep.CONFIRM_PIN) }
+                            } else {
                                 verifyPin(newPin)
                             }
                         }
@@ -205,11 +215,15 @@ class AuthVM @Inject constructor(
                     clearErrors()
 
                     if (newConfirmPin.length == 4) {
-                        if (newConfirmPin == current.currentPin) {
-                            createPin(current.currentPin)
-                        } else {
-                            resetAuthState()
-                            handleError(Exception(context.getString(R.string.error_pin_mismatch)))
+                        viewModelScope.launch {
+                            handleLoading(true)
+                            delay(150)
+                            if (newConfirmPin == current.currentPin) {
+                                createPin(current.currentPin)
+                            } else {
+                                resetAuthState()
+                                handleError(Exception(context.getString(R.string.error_pin_mismatch)))
+                            }
                         }
                     }
                 }
@@ -245,7 +259,7 @@ class AuthVM @Inject constructor(
         viewModelScope.launch {
             try {
                 handleLoading(true)
-                authRepository.savePin(pin)
+                savePinUseCase(pin)
                 authStateManager.setAuthState(AuthState.Authenticated)
                 _uiState.update { it.copy(isComplete = true) }
             } catch (e: Exception) {
@@ -259,9 +273,10 @@ class AuthVM @Inject constructor(
     }
 
     private fun verifyPin(pin: String) {
+        handleLoading(true)
         viewModelScope.launch {
             try {
-                val isValid = authRepository.verifyPin(pin)
+                val isValid = verifyPinUseCase(pin)
 
                 if (isValid) {
                     authStateManager.setAuthState(AuthState.Authenticated)

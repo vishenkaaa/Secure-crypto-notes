@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
@@ -59,8 +60,10 @@ class NotesVM @Inject constructor(
                         groupedNotes = notes.groupBy { n -> n.createdAt.toLocalDate() }
                     )
                 }
-            }.launchIn(viewModelScope)
-            .also { handleLoading(false) }
+                handleLoading(false)
+            }
+            .onCompletion { handleLoading(false) }
+            .launchIn(viewModelScope)
     }
 
     fun requestDeleteConfirmation(note: Note) {
