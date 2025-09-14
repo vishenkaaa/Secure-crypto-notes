@@ -10,9 +10,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,6 +65,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -196,28 +197,43 @@ fun NotesScreen(
             },
             floatingActionButtonPosition = FabPosition.End
         ) { padding ->
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                val sortedGroups = uiState.groupedNotes.toList().sortedByDescending { it.first }
+            if(uiState.groupedNotes.isNotEmpty())
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    val sortedGroups = uiState.groupedNotes.toList().sortedByDescending { it.first }
 
-                items(sortedGroups) { (date, notes) ->
-                    DateSection(
-                        date = date,
-                        notes = notes.sortedByDescending { it.createdAt },
-                        onDeleteNote = requestDeleteConfirmation,
-                        onCopyNote = onCopyNote,
-                        onClick = openViewNoteBottomSheet
+                    items(sortedGroups) { (date, notes) ->
+                        DateSection(
+                            date = date,
+                            notes = notes.sortedByDescending { it.createdAt },
+                            onDeleteNote = requestDeleteConfirmation,
+                            onCopyNote = onCopyNote,
+                            onClick = openViewNoteBottomSheet
+                        )
+                    }
+
+                    item { Spacer(Modifier.height(60.dp)) }
+                }
+            else
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 80.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.empty),
+                        contentDescription = "Empty",
+                        modifier = Modifier.fillMaxWidth(),
+                        contentScale = ContentScale.FillWidth
                     )
                 }
-
-                item { Spacer(Modifier.height(60.dp)) }
-            }
 
             ConfirmationDialog(
                 visible = uiState.showDeleteDialog,

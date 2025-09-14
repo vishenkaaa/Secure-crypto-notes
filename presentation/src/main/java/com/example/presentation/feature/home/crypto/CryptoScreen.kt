@@ -1,6 +1,7 @@
 package com.example.presentation.feature.home.crypto
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,29 +81,42 @@ fun CryptoScreen(
     retryLastAction: () -> Unit,
     hasRetryAction: Boolean = false
 ) {
-
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
             topBar = { CenterAlignedHeader(stringResource(R.string.app_name)) },
         ) { padding ->
-            LazyColumn(
-                state = uiState.scrollState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(uiState.coins) { coin ->
-                    CoinItem(
-                        coin = coin,
-                        onFavoriteClick = toggleFavorite
+            if (uiState.coins.isNotEmpty())
+                LazyColumn(
+                    state = uiState.scrollState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(uiState.coins) { coin ->
+                        CoinItem(
+                            coin = coin,
+                            onFavoriteClick = toggleFavorite
+                        )
+                    }
+                    item { Spacer(Modifier.height(60.dp)) }
+                }
+            else
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 80.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.empty),
+                        contentDescription = "Empty",
+                        modifier = Modifier.fillMaxWidth(),
+                        contentScale = ContentScale.FillWidth
                     )
                 }
-
-                item { Spacer(Modifier.height(60.dp)) }
-            }
         }
     }
 
