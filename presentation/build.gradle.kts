@@ -80,4 +80,5 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.biometric)
+    implementation(libs.mpandroidchart)
 }

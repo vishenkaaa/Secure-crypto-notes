@@ -2,7 +2,9 @@ package com.example.presentation.feature.home.crypto.coinDetails
 
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.coin.CoinDetails
-import com.example.domain.repository.CoinRepository
+import com.example.domain.model.coin.MarketChart
+import com.example.domain.usecase.coin.GetCoinDetailsUseCase
+import com.example.domain.usecase.coin.GetMarketChartUseCase
 import com.example.presentation.arch.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CoinDetailsVM @Inject constructor(
-    private val repository: CoinRepository,
+    private val getCoinDetailsUseCase: GetCoinDetailsUseCase,
+    private val getMarketChartUseCase: GetMarketChartUseCase
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(CoinDetailsUiState())
@@ -24,10 +27,12 @@ class CoinDetailsVM @Inject constructor(
         viewModelScope.launch {
             handleLoading(true)
             try {
-                val coin = repository.getCoinDetails(id)
+                val coin = getCoinDetailsUseCase(id)
                 _uiState.update {
                     it.copy(coinDetails = coin)
                 }
+
+                loadMarketChart(id)
             } catch (e: Exception) {
                 handleError(e){ loadCoinDetails(id) }
             } finally {
@@ -35,8 +40,20 @@ class CoinDetailsVM @Inject constructor(
             }
         }
     }
+
+    private suspend fun loadMarketChart(id: String) {
+        try {
+            val marketChart = getMarketChartUseCase(id)
+            _uiState.update {
+                it.copy(marketChart = marketChart)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
 
 data class CoinDetailsUiState (
-    val coinDetails: CoinDetails = CoinDetails()
+    val coinDetails: CoinDetails = CoinDetails(),
+    val marketChart: MarketChart? = null
 )

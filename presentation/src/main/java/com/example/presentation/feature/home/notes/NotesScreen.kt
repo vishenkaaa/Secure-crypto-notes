@@ -323,7 +323,7 @@ private fun formatDate(date: LocalDate): String {
         today -> stringResource(R.string.today)
         yesterday -> stringResource(R.string.yesterday)
         else -> {
-            val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.forLanguageTag("en"))
+            val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH)
             date.format(formatter)
         }
     }

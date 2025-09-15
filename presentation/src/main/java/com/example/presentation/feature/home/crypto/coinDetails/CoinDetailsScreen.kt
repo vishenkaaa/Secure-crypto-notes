@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,11 +42,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.domain.model.coin.CoinDetails
+import com.example.domain.model.coin.MarketChart
 import com.example.presentation.R
 import com.example.presentation.arch.BaseUiState
 import com.example.presentation.common.ui.components.CenterAlignedHeader
@@ -54,8 +57,16 @@ import com.example.presentation.common.ui.components.LoadingBackground
 import com.example.presentation.common.ui.modifier.softShadow
 import com.example.presentation.common.ui.values.Green
 import com.example.presentation.common.ui.values.Red
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-@SuppressLint("DefaultLocale")
 @Composable
 fun CoinDetailsRoute(
     viewModel: CoinDetailsVM = hiltViewModel(),
@@ -81,7 +92,6 @@ fun CoinDetailsRoute(
     )
 }
 
-@SuppressLint("DefaultLocale")
 @Composable
 fun CoinDetailsScreen(
     uiState: CoinDetailsUiState,
@@ -146,6 +156,14 @@ fun CoinDetailsScreen(
                         }
                     }
 
+                    uiState.marketChart?.let { marketChart ->
+                        item {
+                            PriceChartCard(
+                                marketChart = marketChart,
+                            )
+                        }
+                    }
+
                     uiState.coinDetails.description.takeIf { it.isNotBlank() }?.let { description ->
                         item {
                             DescriptionCard(
@@ -168,6 +186,108 @@ fun CoinDetailsScreen(
         )
 
         LoadingBackground(baseUiState.isLoading)
+    }
+}
+
+@SuppressLint("DefaultLocale")
+@Composable
+private fun PriceChartCard(
+    marketChart: MarketChart,
+) {
+    val onPrimaryContainerColor = MaterialTheme.colorScheme.onPrimaryContainer
+    val primaryColor = MaterialTheme.colorScheme.primary
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .softShadow(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                blurRadius = 8.dp,
+                offsetY = 1.dp,
+                offsetX = 1.dp,
+                cornerRadius = 16.dp
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.price_chart_7_days),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            AndroidView(
+                factory = { context ->
+                    LineChart(context).apply {
+                        description.isEnabled = false
+                        setTouchEnabled(true)
+                        isDragEnabled = true
+                        setScaleEnabled(true)
+                        setPinchZoom(true)
+
+                        xAxis.apply {
+                            position = XAxis.XAxisPosition.BOTTOM
+                            setDrawGridLines(false)
+                            textColor = onPrimaryContainerColor.toArgb()
+                            xAxis.granularity = 24 * 60 * 60 * 1000f
+                            xAxis.isGranularityEnabled = true
+                            xAxis.setLabelCount(7, true)
+                            valueFormatter = object : ValueFormatter() {
+                                private val sdf = SimpleDateFormat("dd/MM", Locale.US)
+                                override fun getFormattedValue(value: Float): String {
+                                    return sdf.format(Date(value.toLong()))
+                                }
+                            }
+                        }
+
+                        axisLeft.apply {
+                            setDrawGridLines(true)
+                            textColor = onPrimaryContainerColor.toArgb()
+                            valueFormatter = object : ValueFormatter() {
+                                override fun getFormattedValue(value: Float): String {
+                                    return "$${String.format("%.2f", value)}"
+                                }
+                            }
+                        }
+
+                        axisRight.isEnabled = false
+                        legend.isEnabled = false
+
+                        setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    }
+                },
+                update = { chart ->
+                    val entries = marketChart.prices.mapIndexed { _, (timestamp, price) ->
+                        Entry(timestamp.toFloat(), price.toFloat())
+                    }
+
+                    val dataSet = LineDataSet(entries, "Price").apply {
+                        color = primaryColor.toArgb()
+                        lineWidth = 2f
+                        setDrawCircles(false)
+                        setDrawValues(false)
+                        mode = LineDataSet.Mode.CUBIC_BEZIER
+                        setDrawFilled(true)
+                        fillColor = primaryColor.copy(alpha = 0.3f).toArgb()
+                    }
+
+                    chart.data = LineData(dataSet)
+                    chart.animateX(1000)
+                    chart.invalidate()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
+        }
     }
 }
 
