@@ -39,4 +39,9 @@
     <string name="server_error">Server error, please try again</string>
     <string name="unexpected_error">Unexpected error occurred</string>
     <string name="usd">%1$s USD</string>
+    <string name="about">About %1$s</string>
+    <string name="rank">Rank #%1$d</string>
+    <string name="current_price">Current Price</string>
+    <string name="_24h">24h</string>
+    <string name="visit_website">Visit Website</string>
 </resources>

@@ -33,6 +33,10 @@ val Red: Color
     @Composable
     get() = colorResource(R.color.red)
 
+val Green: Color
+    @Composable
+    get() = colorResource(R.color.green)
+
 val Orange: Color
     @Composable
     get() = colorResource(R.color.orange)

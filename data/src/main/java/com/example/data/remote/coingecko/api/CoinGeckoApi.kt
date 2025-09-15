@@ -1,7 +1,7 @@
 package com.example.data.remote.coingecko.api
 
 import com.example.data.remote.coingecko.dto.CoinDetailsDto
-import com.example.data.remote.coingecko.dto.CoinMarketDto
+import com.example.data.remote.coingecko.dto.CoinDto
 import com.example.data.remote.coingecko.dto.MarketChartDto
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -15,7 +15,7 @@ interface CoinGeckoApi {
         @Query("order") order: String = "market_cap_desc",
         @Query("per_page") perPage: Int = 10,
         @Query("page") page: Int = 1
-    ): List<CoinMarketDto>
+    ): List<CoinDto>
 
     @GET("coins/{id}")
     suspend fun getCoinDetails(

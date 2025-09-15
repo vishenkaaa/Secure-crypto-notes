@@ -60,7 +60,7 @@ fun AppNavigationBar(
                     clip = false
                 )
                 .clip(RoundedCornerShape(32.dp))
-                .background(MaterialTheme.colorScheme.primary.copy(0.4f))
+                .background(MaterialTheme.colorScheme.primary.copy(0.6f))
                 .padding(horizontal = 8.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically

@@ -2,7 +2,7 @@ package com.example.data.remote.coingecko.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class CoinMarketDto(
+data class CoinDto(
     @SerializedName("id")
     val id: String,
 

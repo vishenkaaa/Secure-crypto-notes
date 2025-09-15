@@ -197,7 +197,7 @@ class AuthVM @Inject constructor(
 
                     if (newPin.length == 4) {
                         viewModelScope.launch {
-                            handleLoading(true)
+                            if (!current.isCreatingPin) handleLoading(true)
                             delay(150)
                             if (current.isCreatingPin) {
                                 _uiState.update { it.copy(step = AuthStep.CONFIRM_PIN) }
@@ -216,7 +216,6 @@ class AuthVM @Inject constructor(
 
                     if (newConfirmPin.length == 4) {
                         viewModelScope.launch {
-                            handleLoading(true)
                             delay(150)
                             if (newConfirmPin == current.currentPin) {
                                 createPin(current.currentPin)

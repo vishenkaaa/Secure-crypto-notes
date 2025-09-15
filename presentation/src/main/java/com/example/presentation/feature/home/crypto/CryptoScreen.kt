@@ -53,6 +53,7 @@ import com.example.presentation.feature.home.crypto.model.CryptoUiState
 @Composable
 fun CryptoRoute(
     viewModel: CryptoVM = hiltViewModel(),
+    onNavigateToCoinDetails: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val baseUiState by viewModel.baseUiState.collectAsStateWithLifecycle()
@@ -65,6 +66,7 @@ fun CryptoRoute(
         uiState = uiState,
         baseUiState = baseUiState,
         toggleFavorite = viewModel::toggleFavorite,
+        onNavigateToCoinDetails = onNavigateToCoinDetails,
         clearErrors = viewModel::clearErrors,
         retryLastAction = viewModel::retryLastAction,
         hasRetryAction = viewModel.hasRetryAction()
@@ -77,6 +79,7 @@ fun CryptoScreen(
     uiState: CryptoUiState,
     baseUiState: BaseUiState,
     toggleFavorite: (Coin) -> Unit = {},
+    onNavigateToCoinDetails: (String) -> Unit,
     clearErrors: () -> Unit,
     retryLastAction: () -> Unit,
     hasRetryAction: Boolean = false
@@ -98,7 +101,8 @@ fun CryptoScreen(
                     items(uiState.coins) { coin ->
                         CoinItem(
                             coin = coin,
-                            onFavoriteClick = toggleFavorite
+                            onFavoriteClick = toggleFavorite,
+                            onClick = onNavigateToCoinDetails
                         )
                     }
                     item { Spacer(Modifier.height(60.dp)) }
@@ -132,7 +136,7 @@ fun CryptoScreen(
 @Composable
 fun CoinItem(
     coin: Coin,
-    onClick: (Coin) -> Unit = {},
+    onClick: (String) -> Unit = {},
     onFavoriteClick: (Coin) -> Unit = {}
 ) {
     Card(
@@ -146,7 +150,7 @@ fun CoinItem(
                 cornerRadius = 16.dp
             )
             .clip(RoundedCornerShape(16.dp))
-            .clickable { onClick(coin) },
+            .clickable { onClick(coin.id) },
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
@@ -173,13 +177,15 @@ fun CoinItem(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+
                     Text(
-                        text = coin.symbol,
+                        text = "  |  " + coin.symbol,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.secondary
                     )
+
                     Spacer(modifier = Modifier.weight(1f))
+
                     IconButton(
                         onClick = { onFavoriteClick(coin) },
                         modifier = Modifier.size(24.dp)
@@ -236,6 +242,7 @@ fun CryptoScreenPreview() {
             baseUiState = baseUiState,
             clearErrors = {},
             retryLastAction = {},
+            onNavigateToCoinDetails = {},
             hasRetryAction = false
         )
     }

@@ -7,5 +7,6 @@
     <color name="background">#101010</color>
     <color name="dark">#1D1D1D</color>
     <color name="red">#D92632</color>
+    <color name="green">#4CAF50</color>
     <color name="orange">#D99426</color>
 </resources>

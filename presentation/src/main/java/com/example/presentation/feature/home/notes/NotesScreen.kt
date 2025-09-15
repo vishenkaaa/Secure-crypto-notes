@@ -268,7 +268,7 @@ fun NotesScreen(
             if (uiState.noteToView != null && uiState.isNoteBottomSheetOpen) {
                 ModalBottomSheet(
                     sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
                     onDismissRequest = closeViewNoteBottomSheet
                 ) {
                     ViewNoteBottomSheet(
@@ -478,8 +478,8 @@ private fun NoteItem(note: Note, onClick: (Note) -> Unit) {
             Text(
                 text = note.content,
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                maxLines = 6,
+                color = MaterialTheme.colorScheme.onBackground.copy(0.6f),
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
         }

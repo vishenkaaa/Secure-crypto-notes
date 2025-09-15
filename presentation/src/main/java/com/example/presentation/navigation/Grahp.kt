@@ -24,5 +24,7 @@ sealed class Home {
     data object Crypto : Home()
 
     @Serializable
-    data object CryptoDetails : Home()
+    data class CoinDetails(
+        val coinId: String
+    ) : Home()
 }

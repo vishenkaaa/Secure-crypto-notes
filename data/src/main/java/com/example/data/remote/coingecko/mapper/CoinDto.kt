@@ -1,9 +1,9 @@
 package com.example.data.remote.coingecko.mapper
 
-import com.example.data.remote.coingecko.dto.CoinMarketDto
+import com.example.data.remote.coingecko.dto.CoinDto
 import com.example.domain.model.coin.Coin
 
-fun CoinMarketDto.toDomain() = Coin(
+fun CoinDto.toDomain() = Coin(
     id = id,
     symbol = symbol,
     name = name,
