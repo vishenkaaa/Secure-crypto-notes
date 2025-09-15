@@ -98,7 +98,7 @@ fun CoinDetailsScreen(
                 CenterAlignedHeader(uiState.coinDetails.name){onBack()}
             }
         ) { padding ->
-            if(!baseUiState.isLoading)
+            if(!baseUiState.isLoading && baseUiState.error==null)
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -178,7 +178,8 @@ private fun CoinLogo(
 ) {
     Card(
         shape = CircleShape,
-        modifier = Modifier.size(110.dp)
+        modifier = Modifier
+            .size(110.dp)
             .softShadow(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 blurRadius = 8.dp,
@@ -261,7 +262,7 @@ private fun PriceCard(coinDetails: CoinDetails) {
             )
 
             Text(
-                text = "$${"%,.2f".format(coinDetails.currentPrice)}",
+                text = stringResource(R.string.usd, "%,.2f".format(coinDetails.currentPrice)),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
@@ -364,7 +365,7 @@ private fun DescriptionCard(
                 cornerRadius = 16.dp
             )
             .clip(RoundedCornerShape(16.dp))
-            .clickable{
+            .clickable {
                 expanded = !expanded
             },
         colors = CardDefaults.cardColors(
@@ -390,21 +391,18 @@ private fun DescriptionCard(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = if (expanded) Int.MAX_VALUE else 5,
             )
-            if (!expanded) {
+            if (!expanded)
                 Text(
-                    text = "Show more",
+                    text = stringResource(R.string.show_more),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable { expanded = true }
                 )
-            } else {
+            else
                 Text(
-                    text = "Show less",
+                    text = stringResource(R.string.show_less),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable { expanded = false }
                 )
-            }
         }
     }
 }

@@ -1,12 +1,12 @@
 package com.example.presentation.common.ui.values
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
 private val ColorScheme
     @Composable
-    get() = lightColorScheme(
+    get() = darkColorScheme(
         primary = Blue,
         onPrimary = White,
         secondary = LightGray,

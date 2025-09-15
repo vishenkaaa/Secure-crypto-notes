@@ -29,6 +29,9 @@ class MainVM @Inject constructor(
     private val _uiEvents = MutableSharedFlow<UiEvent>()
     val uiEvents: SharedFlow<UiEvent> = _uiEvents.asSharedFlow()
 
+    private val _lastAuthenticatedRoute = MutableStateFlow<String?>(null)
+    val lastAuthenticatedRoute: StateFlow<String?> = _lastAuthenticatedRoute.asStateFlow()
+
     private var lastBackPressTime: Long = 0
     private var currentRoute: String? = null
 
@@ -42,13 +45,23 @@ class MainVM @Inject constructor(
         val timeInBackground = System.currentTimeMillis() - backgroundStartTime
 
         if (timeInBackground > 5_000 && backgroundStartTime!=0L){
+            saveCurrentRouteBeforeLock()
             authStateManager.setAuthState(AuthState.NeedsAuth)
         }
     }
 
     fun lockApp() {
+        saveCurrentRouteBeforeLock()
         authStateManager.setAuthState(AuthState.NeedsAuth)
         backgroundStartTime = 0L
+    }
+
+    private fun saveCurrentRouteBeforeLock() {
+        _lastAuthenticatedRoute.value = currentRoute
+    }
+
+    fun clearLastRoute() {
+        _lastAuthenticatedRoute.value = null
     }
 
     fun onBackPressed() {
@@ -86,6 +99,17 @@ class MainVM @Inject constructor(
         return route == Home.Crypto::class.qualifiedName ||
                 route == Home.Notes::class.qualifiedName ||
                 route == Graphs.Auth::class.qualifiedName
+    }
+
+    fun getRouteAfterAuth(): Any {
+        val savedRoute = _lastAuthenticatedRoute.value ?: return Home.Crypto
+
+        return when {
+            savedRoute.startsWith(Home.Crypto::class.qualifiedName!!) -> Home.Crypto
+            savedRoute.startsWith(Home.Notes::class.qualifiedName!!) -> Home.Notes
+            savedRoute.startsWith(Home.CoinDetails::class.qualifiedName!!) -> Home.Crypto
+            else -> Home.Notes
+        }
     }
 }
 

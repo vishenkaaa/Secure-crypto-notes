@@ -1,7 +1,9 @@
 package com.example.presentation
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -44,7 +46,15 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(
+                Color.TRANSPARENT,
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                Color.TRANSPARENT,
+                Color.TRANSPARENT
+            )
+        )
 
         setupLifecycleObserver()
         setContent()
@@ -118,7 +128,8 @@ class MainActivity : FragmentActivity() {
                                 AppNavHost(
                                     modifier = Modifier.fillMaxSize(),
                                     navController = navController!!,
-                                    authState = authState
+                                    authState = authState,
+                                    viewModel = viewModel
                                 )
 
                                 val navBackStackEntry by navController!!.currentBackStackEntryAsState()
