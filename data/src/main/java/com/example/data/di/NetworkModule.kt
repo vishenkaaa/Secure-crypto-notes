@@ -1,5 +1,6 @@
 package com.example.data.di
 
+import com.example.data.BuildConfig
 import com.example.data.remote.coingecko.api.CoinGeckoApi
 import dagger.Module
 import dagger.Provides
@@ -22,7 +23,7 @@ object NetworkModule {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val newRequest = chain.request().newBuilder()
-                    .addHeader("x-cg-demo-api-key", "CG-UXC8ocVxj68HvpKVtrmKDzTu")
+                    .addHeader("x-cg-demo-api-key", BuildConfig.COINGECKO_API_KEY)
                     .build()
                 chain.proceed(newRequest)
             }

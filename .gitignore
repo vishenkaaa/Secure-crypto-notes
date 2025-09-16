@@ -10,6 +10,7 @@ build/
 
 # Local config
 local.properties
+.env
 
 # Generated files
 *.dex
